@@ -17,14 +17,17 @@ markdown-it-py==3.0.0
 MarkupSafe==2.1.5
 mdurl==0.1.2
 orjson==3.10.3
+pillow==10.3.0
 pydantic==2.7.1
 pydantic_core==2.18.2
 Pygments==2.18.0
 PyMuPDF==1.24.4
 PyMuPDFb==1.24.3
+pypng==0.20220715.0
 python-dotenv==1.0.1
 python-multipart==0.0.9
 PyYAML==6.0.1
+qrcode==7.4.2
 requests==2.32.2
 rich==13.7.1
 shellingham==1.5.4
