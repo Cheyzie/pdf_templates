@@ -19,15 +19,6 @@ class QRBuilder:
         "horizontal_bars": HorizontalBarsDrawer
     }
 
-    __eye_shape_styles = {
-        "square":  SquareModuleDrawer,
-        "gapped_square": SquareModuleDrawer,
-        "rounded": RoundedModuleDrawer,
-        "circle": RoundedModuleDrawer,
-        "vertical_bars": RoundedModuleDrawer,
-        "horizontal_bars": RoundedModuleDrawer
-    }
-
     def style_inner_eyes(self, img):
         img_size = img.size[0]
         mask = Image.new('L', img.size, 0)
@@ -48,19 +39,6 @@ class QRBuilder:
         draw.rectangle((img_size-90, 60, img_size-60, 90), fill=0) #top right eye
         draw.rectangle((60, img_size-90, 90, img_size-60), fill=0) #bottom left eye  
         return mask
-
-    def add_corners(self, im, rad):
-        circle = Image.new('L', (rad * 2, rad * 2), 0)
-        draw = ImageDraw.Draw(circle)
-        draw.ellipse((0, 0, rad * 2 - 1, rad * 2 - 1), fill=255)
-        alpha = Image.new('L', im.size, 255)
-        w, h = im.size
-        alpha.paste(circle.crop((0, 0, rad, rad)), (0, 0))
-        alpha.paste(circle.crop((0, rad, rad, rad * 2)), (0, h - rad))
-        alpha.paste(circle.crop((rad, 0, rad * 2, rad)), (w - rad, 0))
-        alpha.paste(circle.crop((rad, rad, rad * 2, rad * 2)), (w - rad, h - rad))
-        im.putalpha(alpha)
-        return im
 
     def make_qr(
             self,
@@ -103,7 +81,6 @@ class QRBuilder:
             # https://drive.usercontent.google.com/download?id=1F9guy0NfhvuFUE50G0nGlCFwKTsqW7_v&export=download
             if resp.status_code == 200:
                 logo = Image.open(io.BytesIO(resp.content)).convert('RGBA')
-                logo = self.add_corners(logo, 100)
         
         qr_img = qr.make_image(image_factory=StyledPilImage,
                         module_drawer=drawer,

@@ -6,7 +6,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.responses import Response
 from pydantic import BaseModel, Field
 import uvicorn
-from services.qr import QRBuilder
+from .services.qr import QRBuilder
 
 app = FastAPI()
 
