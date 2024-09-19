@@ -51,7 +51,8 @@ class QRBuilder:
             main_color: tuple[int, int, int] = (0, 0, 0),
             bg_color: tuple[int, int, int] = (255, 255, 255),
             inner_eye_color: tuple[int, int, int] = (0, 0, 0),
-            outer_eye_color: tuple[int, int, int] = (0, 0, 0)
+            outer_eye_color: tuple[int, int, int] = (0, 0, 0),
+            format: str = "PNG"
             ) -> bytes:
         logo = None
 
@@ -62,6 +63,8 @@ class QRBuilder:
         drawer = SquareModuleDrawer()
         eyes_drawer = SquareModuleDrawer()
 
+        if bg_color == (0,0,0):
+            bg_color = (1,1,1)
         if style in self.__shape_styles:
             drawer = self.__shape_styles[style]()
         if eyes_style in self.__shape_styles:   
@@ -78,7 +81,6 @@ class QRBuilder:
 
         if logo_url is not None:
             resp = requests.get(logo_url)
-            # https://drive.usercontent.google.com/download?id=1F9guy0NfhvuFUE50G0nGlCFwKTsqW7_v&export=download
             if resp.status_code == 200:
                 logo = Image.open(io.BytesIO(resp.content)).convert('RGBA')
         
@@ -92,6 +94,6 @@ class QRBuilder:
         intermediate_img = Image.composite(qr_inner_eyes_img, qr_img, inner_eye_mask)
         final_image = Image.composite(qr_outer_eyes_img, intermediate_img, outer_eye_mask)
         img_byte_arr = io.BytesIO()
-        final_image.save(img_byte_arr, format='PNG')
+        final_image.save(img_byte_arr, format=format)
         img_byte_arr = img_byte_arr.getvalue()
         return img_byte_arr

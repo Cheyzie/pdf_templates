@@ -55,6 +55,7 @@ def get_tmp_file(suffix: str):
 
 @app.post("/poster/", response_class=Response)
 def insert_qr(poster: PosterRequest, tmpFile: Annotated[str, Depends(get_tmp_file(".pdf"))]):
+    myfont = "fonts/e-Ukraine-Medium.otf"
     qr_builder = QRBuilder()
     resp = requests.get(poster.template_url)
     if resp.status_code != 200:
@@ -68,6 +69,8 @@ def insert_qr(poster: PosterRequest, tmpFile: Annotated[str, Depends(get_tmp_fil
         first_page = file_handle[0]
     except:
         raise HTTPException(419, {"message": "invalid poster file"}) 
+    
+    first_page.insert_font(fontname="F0", fontfile=myfont)
 
     for el in poster.elements:
         if el.element_type == "qr":
@@ -89,7 +92,7 @@ def insert_qr(poster: PosterRequest, tmpFile: Annotated[str, Depends(get_tmp_fil
             shape = first_page.new_shape()
             # define the position 
             image_rectangle = fitz.Rect(el.pos.x,el.pos.y,el.pos.x+el.pos.w,el.pos.y+el.pos.h)
-            shape.insert_textbox(image_rectangle, el.content, fontname="hebo", fontsize=float(el.text_styles.fontsize), color=tuple(float(c)/255 for c in el.text_styles.color), rotate=0)
+            shape.insert_textbox(image_rectangle, el.content, fontname="F0", fontsize=float(el.text_styles.fontsize), color=tuple(float(c)/255 for c in el.text_styles.color), rotate=0)
             shape.commit()
     return Response(file_handle.write(), status_code=201, media_type="application/pdf")  
 
