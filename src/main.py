@@ -111,6 +111,13 @@ def makeQR(qr: QRRequest):
                 )
     return Response(qr, status_code=201, media_type="image/png")  
 
+@app.get("/health")
+def health():
+    return Response(content='{"status": "ok"}', status_code=200)
+
+@app.get("/ready")
+def ready():
+    return Response(content='{"status": "ok"}', status_code=200)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, loop="uvloop")
